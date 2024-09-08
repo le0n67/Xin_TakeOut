@@ -6,3 +6,8 @@ sky:
     database: xin_takeout
     username: root
     password: 546712
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5tFgdBn3xqsZgStdCM9j
+    access-key-secret: mUSrHB0u3FoFgFqfvgw2RXqYF5tlAy
+    bucket-name: xintakeout
