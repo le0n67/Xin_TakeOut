@@ -105,7 +105,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     /**
      * 扩展消息转换器
-     *
+     * 统一对日期进行格式化处理
      * @param converters
      */
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {

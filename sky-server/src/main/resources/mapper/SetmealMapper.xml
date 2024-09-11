@@ -42,6 +42,7 @@
             <if test="image != null">image = #{image},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </set>
+        where id = #{id}
     </update>
 
     <select id="list" parameterType="Setmeal" resultType="Setmeal">
