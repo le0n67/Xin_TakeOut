@@ -71,4 +71,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public List<ShoppingCart> showShoppingCart() {
         return shoppingCartMappper.list(ShoppingCart.builder().userId(BaseContext.getCurrentId()).build());
     }
+
+    public void cleanShoppingCart() {
+        shoppingCartMappper.deleteByUserId(BaseContext.getCurrentId())    ;
+    }
 }
