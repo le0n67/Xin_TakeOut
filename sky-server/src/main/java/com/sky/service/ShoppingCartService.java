@@ -3,6 +3,8 @@ package com.sky.service;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
 
+import java.util.List;
+
 /**
  * Date：2024/9/13  9:12
  * Description：TODO
@@ -12,4 +14,6 @@ import com.sky.entity.ShoppingCart;
  */
 public interface ShoppingCartService {
     void addShoppingCart(ShoppingCartDTO shoppingCartDTO);
+
+    List<ShoppingCart> showShoppingCart();
 }

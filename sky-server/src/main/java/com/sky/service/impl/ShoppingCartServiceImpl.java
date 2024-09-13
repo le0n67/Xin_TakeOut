@@ -67,4 +67,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCartMappper.insert(shoppingCart);
         }
     }
+
+    public List<ShoppingCart> showShoppingCart() {
+        return shoppingCartMappper.list(ShoppingCart.builder().userId(BaseContext.getCurrentId()).build());
+    }
 }
