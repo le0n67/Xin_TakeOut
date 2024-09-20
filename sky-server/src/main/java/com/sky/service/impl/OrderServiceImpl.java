@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,5 +225,47 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderDetailList(orderDetailList);
 
         return orderVO;
+    }
+
+    /**
+     * 用户取消订单
+     *
+     * @param id
+     */
+    @Override
+    public void userCancelById(Long id) {
+        //根据id查询订单
+        Orders orders = orderMapper.getById(id);
+        //判断订单是否存在
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        //如果订单状态到达商家接单以后的阶段，不能直接取消订单
+        if (orders.getStatus() >= Orders.CONFIRMED) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        // TODO: 2024/1/1 暂时跳过微信退款接口，直接修改订单状态的代码
+        ////订单处于待接单状态下需要进行退款
+        if (orders.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            //调用微信退款接口
+            //try {
+            //    weChatPayUtil.refund(
+            //        orders.getNumber(),//商户订单号
+            //        orders.getNumber(),//商户退款单号
+            //        orders.getAmount(),//订单金额
+            //        orders.getAmount()//退款金额
+            //    );
+            //} catch (Exception e) {
+            //    throw new OrderBusinessException(MessageConstant.ORDER_REFUND_ERROR);
+            //}
+            //修改订单支付状态为退款
+            orders.setPayStatus(Orders.REFUND);
+        }
+        //修改订单状态为已取消,并设置取消原因和取消时间
+        orders.setStatus(Orders.CANCELLED);
+        orders.setCancelReason(MessageConstant.ORDER_CANCELLED_BY_USER);
+        orders.setCancelTime(LocalDateTime.now());
+        //更新订单
+        orderMapper.update(orders);
     }
 }
