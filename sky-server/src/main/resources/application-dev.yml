@@ -26,3 +26,7 @@ sky:
     we-chat-pay-cert-file-path: /path/to/your/dev/we-chat-pay-cert-file.pem
     notify-url: https://your-dev-notify-url.com
     refund-notify-url: https://your-dev-refund-notify-url.com
+  shop:
+    address: 太原市小店区山西大学东山校区
+  baidu:
+    ak: N7gLQVnhw2napHh9JOwdSsd7R570I5Wc

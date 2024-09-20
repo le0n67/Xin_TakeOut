@@ -25,5 +25,7 @@ public class MessageConstant {
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
     public static final String ORDER_CANCELLED_BY_USER = "用户取消订单";
+    public static final String ORDER_REFUND_ERROR = "退款失败";
+    public static final String ORDER_REJECTION_REASON_IS_NULL = "未填写取消原因";
 
 }
