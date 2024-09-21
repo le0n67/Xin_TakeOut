@@ -22,6 +22,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -48,7 +49,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@PropertySource("classpath:application.yml")
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -63,6 +63,9 @@ public class OrderServiceImpl implements OrderService {
     private UserMapper userMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Value("${sky.shop.address}")
     private String shopAddress;
@@ -181,17 +184,30 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.update(orders);
 
-        // TODO: 暂时跳过微信支付接口，直接修改订单状态的代码
-//        //通过webSocket向客户端推送消息
-//        Map map = new HashMap(){{
-//            put("type", "order");
-//            put("orderId", ordersDB.getId());
-//            put("content", "您有新的订单,请计时处理,"+"订单号: "+outTradeNo);
-//            }};
-//        String json = JSON.toJSONString(map);
-//        webSocketServer.sendToAllClient(json);
+        //通过webSocket向客户端推送消息
+        Map map = new HashMap() {{
+            put("type", 1);
+            put("orderId", ordersDB.getId());
+            put("content", "您有新的订单,请计时处理," + "订单号: " + outTradeNo);
+        }};
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
 
 
+    }
+
+    public void reminder(Long id) {
+        Orders ordersDB = orderMapper.getById(id);
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        Map map = new HashMap() {{
+            put("type", 2);
+            put("orderId", id);
+            put("content", "订单号: " + ordersDB.getNumber() + "的订单已开始配送，请及时到达，感谢您的支持！");
+        }};
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     public PageResult pageQuery4User(int pageNum, int pageSize, Integer status) {
@@ -518,6 +534,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.update(orders);
     }
+
 
     /**
      * 检查客户的收货地址是否超出配送范围
