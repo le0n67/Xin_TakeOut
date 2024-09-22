@@ -4,6 +4,8 @@ import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 /**
  * Date：2024/9/10  16:01
  * Description：TODO
@@ -27,4 +29,6 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{id}")
     User getById(Long userId);
+
+    Integer countByMap(Map map);
 }
