@@ -1,10 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -109,11 +111,11 @@ public class ReportServiceImpl implements ReportService {
             validOrderCountList.add(validOrderCount == null ? 0 : validOrderCount);
         }
         //计算总订单量和有效订单量
-        Integer totalOrderCount= orderCountList.stream().reduce(Integer::sum).get();
+        Integer totalOrderCount = orderCountList.stream().reduce(Integer::sum).get();
         Integer totalValidOrderCount = validOrderCountList.stream().reduce(Integer::sum).get();
         //计算总订单量和有效订单量的占比
         Double orderCompletionRate = (totalOrderCount == 0 ? 0.0 : totalValidOrderCount.doubleValue() / totalOrderCount);
-        log.info("总订单量：{}，有效订单量：{}，订单完成率：{}%", totalOrderCount, totalValidOrderCount, orderCompletionRate*100);
+        log.info("总订单量：{}，有效订单量：{}，订单完成率：{}%", totalOrderCount, totalValidOrderCount, orderCompletionRate * 100);
         //将orderCountList、validOrderCountList和dateList,orderCompletionRate转成字符串封装进VO
         OrderReportVO orderReportVO = OrderReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
@@ -124,5 +126,20 @@ public class ReportServiceImpl implements ReportService {
                 .orderCompletionRate(orderCompletionRate.doubleValue())
                 .build();
         return orderReportVO;
+    }
+
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+        //查询商品销量
+        //select od.name,sum(od.number) from order_detail od,orders o where od.order_id = o.id and o.status = 5 and o.order_time >= beginTime and o.order_time <= endTime group by od.name order by sum(od.number) desc limit 10
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        List<GoodsSalesDTO> goodsSalesDTOList = orderMapper.getSalesTop10(beginTime, endTime);
+        //将goodsSalesDTOList中的name和number分别转成列表字符串封装进VO
+        SalesTop10ReportVO salesTop10ReportVO = SalesTop10ReportVO.builder()
+                .nameList(StringUtils.join(goodsSalesDTOList.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList()), ","))
+                .numberList(StringUtils.join(goodsSalesDTOList.stream().map(GoodsSalesDTO::getNumber).collect(Collectors.toList()), ","))
+                .build();
+        return salesTop10ReportVO;
     }
 }
