@@ -139,8 +139,8 @@ public class OrderServiceImpl implements OrderService {
      */
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
         // 当前登录用户id
-        Long userId = BaseContext.getCurrentId();
-        User user = userMapper.getById(userId);
+        //Long userId = BaseContext.getCurrentId();
+        //User user = userMapper.getById(userId);
 
         ////调用微信支付接口，生成预支付交易单
         //JSONObject jsonObject = weChatPayUtil.pay(
