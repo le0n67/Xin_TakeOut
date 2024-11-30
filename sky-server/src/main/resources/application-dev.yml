@@ -8,8 +8,8 @@ sky:
     password: 546712
   alioss:
     endpoint: oss-cn-beijing.aliyuncs.com
-    access-key-id: LTAI5tFgdBn3xqsZgStdCM9j
-    access-key-secret: mUSrHB0u3FoFgFqfvgw2RXqYF5tlAy
+    access-key-id: 123
+    access-key-secret: 123
     bucket-name: xintakeout
   redis:
     host: localhost
@@ -17,8 +17,8 @@ sky:
     password: 546712
     database: 0
   wechat:
-    appid: wx456cddabd6af2fac
-    secret: 1fdb384d237eccffca1b1915c6d925e5
+    appid: 123
+    secret: 123
     mchid: your_dev_mchid
     mch-serial-no: your_dev_mch_serial_no
     private-key-file-path: /path/to/your/dev/private-key-file.pem
@@ -29,4 +29,4 @@ sky:
   shop:
     address: 太原市小店区山西大学东山校区
   baidu:
-    ak: N7gLQVnhw2napHh9JOwdSsd7R570I5Wc
+    ak: 123
